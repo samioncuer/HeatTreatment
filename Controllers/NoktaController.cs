@@ -29,7 +29,7 @@ namespace HeatTreatment.Controllers
         [HttpPost]
         public JsonResult GetNoktaById(int grafikId)
         {
-            return Json(_context.GRFNOKTALAR.Where(w => w.GRAFIKID == grafikId).ToList());
+            return Json(_context.GRFNOKTALAR.Where(w => w.GRAFIKID == grafikId).OrderBy(c => c.SIRANO).ToList());
         }   
         [HttpPost]
         public void UpdateNokta(string model,string timespan)

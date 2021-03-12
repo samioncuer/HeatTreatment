@@ -26,6 +26,7 @@ namespace HeatTreatment.Controllers
         {
             return Json(_context.GRFOKUYUCU.ToList());
         } 
+        [HttpPost]
         public void UpdateOkuyucu(string model){
             tempOkuyucu okuyucu = new tempOkuyucu();
             okuyucu = Newtonsoft.Json.JsonConvert.DeserializeObject<tempOkuyucu>(model);

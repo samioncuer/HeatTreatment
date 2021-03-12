@@ -42,6 +42,7 @@
 <script>
 	  
 $(function(){
+	console.log(BaseURL);
 	$('#grd_grfk').datagrid({
 		title:'GRAFİKLER',
 		iconCls:'icon-edit',
@@ -49,7 +50,7 @@ $(function(){
 		height:270,
 		singleSelect:true,
 		idField:'id',
-		url:'https://localhost:5001/Grafik/GetGrafik',
+		url: BaseURL + '/Grafik/GetGrafik',
 		method:'get',
 		columns:[[
 			/*{field:'id',title:'Grafik ID',width:70,align:'left'},*/
@@ -93,7 +94,7 @@ $(function(){
 			row.zamanaralik = null;
 			//////////////////////////
 				var xx = JSON.stringify(row);
-				$.post('https://localhost:5001/Grafik/UpdateGrafik',{ model:xx, timespan:asd }
+				$.post( BaseURL + '/Grafik/UpdateGrafik',{ model:xx, timespan:asd }
 					,function(result){
 						console.log(result);
 					}).fail(function(e){
@@ -114,7 +115,7 @@ $(function(){
 		},
 		onClickRow: function(index,row){
 			var xx = row.id;
-			var noktaJson = $.post('https://localhost:5001/Nokta/GetNoktaById',{ grafikId:xx }
+			var noktaJson = $.post( BaseURL + '/Nokta/GetNoktaById',{ grafikId:xx }
 				,function(result){
 					$('#grd_nkt').datagrid('loadData',result);
 				}).fail(function(e){
@@ -125,9 +126,9 @@ $(function(){
 		onDblClickRow: function(index,row){
 			var xx = row.id;
 			var grf_baslama = row.baslama;
-			var noktaJson = $.post('https://localhost:5001/Nokta/GetNoktaById',{ grafikId:xx }
+			var noktaJson = $.post( BaseURL + '/Nokta/GetNoktaById',{ grafikId:xx }
 				,function(nokta){
-					var jqxhrs = $.get( "https://localhost:5001/Okuyucu/GetOkuyucu", function(okuyucu) {
+					var jqxhrs = $.get( BaseURL + "/Okuyucu/GetOkuyucu", function(okuyucu) {
 							draw(nokta,okuyucu,grf_baslama);
 							$('#exp-jpg').show();
 						});
@@ -145,7 +146,7 @@ $(function(){
 		height:270,
 		singleSelect:true,
 		idField:'id',
-		url:'https://localhost:5001/Okuyucu/GetOkuyucu',
+		url: BaseURL + '/Okuyucu/GetOkuyucu',
 		method:'get',
 		columns:[[
 			{field:'grup',title:'Grup',width:60,align:'center',editor:'textbox'},
@@ -171,11 +172,12 @@ $(function(){
 				index: index,
 				field: 'id'
 			});
+			console.log(changes);
 			$('#grd_okyc').datagrid('reload');
 			if(changes.grup == "" || changes.okuyucuadi == "" || changes.arti=="" || changes.eksi == "" ){
 				alert("Boş alanları doldurup baştan değişiklik yapınız.");
 			}
-			if(changes.grup.length > 4 )
+			if(typeof changes.grup != 'undefined' && changes.grup.length > 4 )
 				alert("Grup adı 4 harften kısa olmak zorunda." );
 		},
 		onBeforeEdit:function(index,row){
@@ -186,7 +188,9 @@ $(function(){
 			row.editing = false;
 			//////////////////////////
 				var xx = JSON.stringify(row);
-				$.post('https://localhost:5001/Okuyucu/UpdateOkuyucu',{ model:xx }
+				console.log(xx);
+				console.log(row);
+				$.post( BaseURL + '/Okuyucu/UpdateOkuyucu',{ model:xx }
 					,function(result){
 						console.log(result);
 					}).fail(function(e){
@@ -267,7 +271,7 @@ $('#grd_nkt').datagrid({
 			row.beklemesuresi = null;
 			//////////////////////////
 			var nn = JSON.stringify(row);
-			$.post('https://localhost:5001/Nokta/UpdateNokta',{ model:nn, timespan:asc }
+			$.post( BaseURL + '/Nokta/UpdateNokta',{ model:nn, timespan:asc }
 				,function(result){
 					console.log(result);
 				}).fail(function(e){
@@ -277,7 +281,7 @@ $('#grd_nkt').datagrid({
 			$(document).ready(function () { 
 			setTimeout(function () { 
 			var p = row.grafikid;
-			var noktaJson = $.post('https://localhost:5001/Nokta/GetNoktaById',{ grafikId:p }
+			var noktaJson = $.post( BaseURL + '/Nokta/GetNoktaById',{ grafikId:p }
 				,function(result){
 					$('#grd_nkt').datagrid('loadData',result);
 					
@@ -317,7 +321,7 @@ function deleterow_grfk(target){
 			}
 			else{
 				var xx = row.id;
-				$.post('https://localhost:5001/Grafik/DeleteGrafik',{ id: xx }
+				$.post( BaseURL + '/Grafik/DeleteGrafik',{ id: xx }
 					,function(result){
 						console.log(result);
 					}).fail(function(e){
@@ -342,7 +346,7 @@ function deleterow_okyc(target){
 			}
 			else{
 				var xx = row.id;
-				$.post('https://localhost:5001/Okuyucu/DeleteOkuyucu',{ id: xx }
+				$.post(BaseURL + '/Okuyucu/DeleteOkuyucu',{ id: xx }
 					,function(result){
 						console.log(result);
 					}).fail(function(e){
@@ -367,7 +371,7 @@ function deleterow_nkt(target){
 			}
 			else {
 				var xx = row.id;
-				$.post('https://localhost:5001/Nokta/DeleteNokta', { id: xx }
+				$.post( BaseURL + '/Nokta/DeleteNokta', { id: xx }
 					,function(result){
 						console.log(result);
 					}).fail(function(e){
@@ -379,7 +383,7 @@ function deleterow_nkt(target){
 		$(document).ready(function () { 
 			setTimeout(function () { 
 			var p = row.grafikid;
-			var noktaJson = $.post('https://localhost:5001/Nokta/GetNoktaById',{ grafikId:p }
+			var noktaJson = $.post( BaseURL + '/Nokta/GetNoktaById',{ grafikId:p }
 				,function(result){
 					$('#grd_nkt').datagrid('loadData',result);
 					

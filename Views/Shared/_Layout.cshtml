@@ -69,6 +69,9 @@
     <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="~/easyui/jquery.min.js"></script>
     <script type="text/javascript" src="~/easyui/jquery.easyui.min.js"></script>
+    <script>
+        var BaseURL = @Json.Serialize(@Configuration.GetSection("ConnectionStrings").GetSection("BaseUrl").Value);
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
