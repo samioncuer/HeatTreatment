@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KBS</title>
+    <link rel="stylesheet" type="text/css" href="~/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="~/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="~/easyui/demo/demo.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/layout.css" />
+    <link rel="stylesheet" href="~/easyui/themes/default/easyui.css" />
+    
+	
+</head>
+<body>
+    <header>
+        <div class="top-container">
+            <input type="checkbox" name="" id="check">
+            
+            <div class="logo-container">
+                <h3 class="logo">Kartal<span>BombeSanayi</span></h3>
+            </div>
+
+            <div class="nav-btn">
+                <div class="nav-links">
+                    <ul>
+                        <li class="nav-link" style="--i: .6s">
+                            <a href="/">Anasayfa</a>
+                        </li>
+                        <li class="nav-link" style="--i: .6s">
+                            <a href="/HeatTreatment">Isıl İşlem Grafik</a>
+                        </li>
+                        <li class="nav-link" style="--i: .6s">
+                            <a href="/Draw">Draw</a>
+                        </li>
+                        <li class="nav-link" style="--i: .6s">
+                            <a href="/Draw">Raporlar</a>
+                        </li>
+                        <li>
+                            <div class="log-sign" style="--i: 1.8s">
+                                    <p class="btn-logout">Kullanıcı Adı</p>
+                                    <a href="/account/logout" class="btn solid">Çıkış</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="hamburger-menu-container">
+                <div class="hamburger-menu">
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/momentjs/moment.min.js"></script>
+    @* <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js"></script> *@
+	<script src="~/chartjs/Chart.min.js"></script>
+	<script src="~/chartjs/dist/utils.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="~/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="~/easyui/jquery.easyui.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
