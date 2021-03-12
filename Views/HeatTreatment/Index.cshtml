@@ -28,7 +28,7 @@
 <!--------------------------------- chart ------------------------------>
 	<div style="width:900px; display:inline-block; margin-left:70px; margin-top:10px;">
 		<div id="exp-jpg" style="margin-left:60px; display: none;">
-			<a id="download" href="javascript:void(0)" class="btn btn-xs btn-primary">JPEG OLUŞTUR</a>
+			<a id="download" href="javascript:void(0)" class="btn btn-xs btn-primary" onclick="toJpeg()">JPEG OLUŞTUR</a>
 		</div>
 		<div id=graph-container>
 		<canvas id="chart1" style="margin-top: 10px;"></canvas>
@@ -733,16 +733,16 @@ function insert_nkt(){
 			var chart = new Chart(ctx, cfg);
 			chart.update();
 
-		document.getElementById("download").addEventListener('click', function(){
-			
+			$(function toJpeg(){
 			/*Get image of canvas element*/
+			
 			var url_base64jp = chart.toBase64Image();
 			/*get download button (tag: <a></a>) */
 			var a =  document.getElementById("download");
 			/*insert chart image url to download button (tag: <a></a>) */
 			a.download = 'isil-islem-grafik.png';
 			a.href = url_base64jp;
-			a.click();
+			//a.click();
 			});
 		
 		}
