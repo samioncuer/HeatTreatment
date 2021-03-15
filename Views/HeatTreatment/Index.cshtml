@@ -60,7 +60,11 @@ $(function(){
 					return value.hours + ':' + value.minutes;
 				}
 			},
-			{field:'baslama',title:'başlama zamanı',width:200,align:'center',editor:'datetimebox'},
+			{field:'baslama',title:'başlama zamanı',width:200,align:'center',editor:'datetimebox',
+			formatter: function(value,row,index){
+					return moment(value).format('L, h:mm:ss a');
+				}
+			},
 			{field:'action',title:'Action',width:110,align:'center',
 				formatter:function(value,row,index){
 					if (row.editing){
@@ -429,7 +433,7 @@ function insert_grfk(){
 		index: index,
 		row:{
 			grafikadi: 'yeni grafik',
-			zamanaralik: 0000,
+			zamanaralik: nr[nr.length-1].zamanaralik,
 			başlama: moment(),
 		}
 	});
@@ -465,16 +469,18 @@ function insert_nkt(){
 		index = 0;
 	}
 	var nr = $('#grd_nkt').datagrid('getRows');
+	console.log(nr);
+	console.log(nr[nr.length-1].beklemesuresi);
 	index = nr.length + 1;
 	var grfk = $('#grd_grfk').datagrid('getSelected');
 	$('#grd_nkt').datagrid('insertRow', {
 		index: index,
 		row:{
-			sirano: 1,
+			sirano: nr[nr.length-1].sirano + 1,
 			grafikid: grfk.id,
-			baslamasicaklık: 100,
-			bitissicaklık: 100,
-			beklemesuresi: 0000,
+			baslamasicaklik: nr[nr.length-1].bitissicaklik,
+			bitissicaklik: nr[nr.length-1].bitissicaklik - 20,
+			beklemesuresi: nr[nr.length-1].beklemesuresi,
 			hizi: 100,
 			arti: 0,
 			eksi: 0,
@@ -631,7 +637,7 @@ function insert_nkt(){
 		var ctx = document.getElementById('chart1').getContext('2d');
 		ctx.canvas.width = 900;
 		ctx.canvas.height = 300;
-		var now = Date();
+		var now = grf_Baslama;
 		var m_now = moment(now).format('MMMM Do YYYY, h:mm:ss a');
  		var color = Chart.helpers.color;
 		var cfg = {
@@ -719,13 +725,13 @@ function insert_nkt(){
 		};
 
 		
-		var backgroundColor = 'white';
-		@* Chart.plugins.register({
+		@* var backgroundColor = 'white';
+		 Chart.plugins.register({
    			beforeDraw: function(c) {
 				ctx.fillStyle = backgroundColor;
 				ctx.fillRect(0, 0, c.chart.width, c.chart.height);
 				}
-			}); *@
+			});  *@
 		/*if(chart != undefined){
 			chart.destroy();
 		}	
