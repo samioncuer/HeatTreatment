@@ -146,7 +146,7 @@ $(function(){
 	$('#grd_okyc').datagrid({
 		title:'OKUYUCULAR',
 		iconCls:'icon-edit',
-		width:370,
+		width:320,
 		height:270,
 		singleSelect:true,
 		idField:'id',
@@ -155,8 +155,8 @@ $(function(){
 		columns:[[
 			{field:'grup',title:'Grup',width:60,align:'center',editor:'textbox'},
 			{field:'okuyucuadi',title:'Okuyucu Adı',width:90,align:'center',editor:'textbox'},
-			{field:'arti',title:'ARTI',width:50,align:'center',editor:'numberbox'},
-			{field:'eksi',title:'EKSİ',width:50,align:'center',editor:'numberbox'},
+			{field:'arti',title:'FARK',width:50,align:'center',editor:'numberbox'},
+			//{field:'eksi',title:'EKSİ',width:50,align:'center',editor:'numberbox'},
 			{field:'action',title:'Action',width:110,align:'center',
 				formatter:function(value,row,index){
 					if (row.editing){
@@ -289,10 +289,10 @@ $('#grd_nkt').datagrid({
 				,function(result){
 					$('#grd_nkt').datagrid('loadData',result);
 					
-				}).fail(function(e){
-					console.log(e);
-				}
-			);
+					}).fail(function(e){
+						console.log(e);
+					}
+				);
 				}, 1100); 
 			}); 
 			///////////////////////////// 
@@ -504,6 +504,14 @@ function insert_nkt(){
 			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
 		});
 	}
+	function sort_by_key_number(array, key)
+		{
+		return array.sort(function(a, b)
+			{
+			var x = a[key]; var y = b[key];
+			return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+		});
+	}
 	noktalar = sort_by_key(noktalar, 'sirano');
 	
 	function generateData() { /// okuyucular bağımsız olduğu için ataması içeride yapılıcak
@@ -522,70 +530,190 @@ function insert_nkt(){
 				return Math.random() * (max - min) + min;
 			}
 
-
-			/////////// değişim burday başlıyorrr 
 			function randomBar(date, sicaklik) {  
 				
-				var open = randomNumber(sicaklik * 0.97, sicaklik * 1.02).toFixed(2); //toFixed sayının virgülden sonraki basamak sayısı
+				var open = randomNumber(sicaklik * 0.98, sicaklik * 1.01).toFixed(2); //toFixed sayının virgülden sonraki basamak sayısı
 				return {
 					t: date.valueOf(),
 					y: open
 				};
 			}
+			
 
-			var date = moment(grf_Baslama); //orjinal hali ('Jan 01 1990', 'MMM DD')
-			var calcTime = moment(grf_Baslama);
-			var data = [];
-			var lessThanDay = unitLessThanDay();
-			for(i=0; i<noktalar.length; i++){
-				var bas = noktalar[i].baslamasicaklik;
-				var bit = noktalar[i].bitissicaklik;
-				var hiz = noktalar[i].hizi;
-				var bek = noktalar[i].beklemesuresi.totalMinutes;
-				var a = Math.ceil( ( (60*Math.abs(bas - bit) )/hiz ) );
-				calcTime = calcTime.clone().add(a, unit).startOf(unit);
-				var sicaklik = Math.abs(bas - bit)/a;
-				//console.log(sicaklik);
-				var b = bas; 
+			/////////////////  DATA ÜRETİMİ  
+			/////////////////  DATA ÜRETİMİ  
+			/////////////////  DATA ÜRETİMİ  
+			/////////////////  DATA ÜRETİMİ  
+			
+			okuyucular = sort_by_key_number(okuyucular, 'arti');
+			console.log(okuyucular);
+			var x = [];
+			for (k=0; k<okuyucular.length; k++){
 
-				for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
-						if(bas > bit ){
-							b = b - sicaklik;
+				var okFark = okuyucular[k].arti;
+				var okAdi = okuyucular[k].okuyucuadi;
+				var date = moment(grf_Baslama); //orjinal hali ('Jan 01 1990', 'MMM DD')
+				var calcTime = moment(grf_Baslama);
+				var data = [];
+				var lessThanDay = unitLessThanDay();
+				////////////////////////////////////////////////// ------ generateDataset bu hizzada olucak okuyucular for u kapanmadan önce
+
+				for(i=0; i<noktalar.length; i++){
+					var bas = noktalar[i].baslamasicaklik;
+					var bit = noktalar[i].bitissicaklik;
+					var hiz = noktalar[i].hizi;
+					var bek = noktalar[i].beklemesuresi.totalMinutes;
+					var arti = noktalar[i].arti;
+					var eksi = noktalar[i].eksi;
+					
+					
+
+					if(bek == 0)
+					{
+
+						if(bas<bit)
+						{	
+							//var ok1time = Math.ceil( ( (60*Math.abs(bas-bit + okuyucular[0].arti ) ) /hiz) );
+							
+							var time = Math.floor( ( (60*Math.abs(bas - bit) )/hiz ) );
+							calcTime = calcTime.clone().add(time, unit).startOf(unit);
+							var sicaklik = (Math.abs(bas - bit))/time;
+							//console.log(data);
+							var b = bas + okFark;
+							
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
+								
+								data.push(randomBar(date, b));
+								b = b + sicaklik;
+								
+							}
 						}
-						else{
-							b = b + sicaklik;
+						if(bas>bit)
+						{
+							var decTime = Math.ceil( ( 60*( Math.abs(bas - bit) - (okFark/2) ) ) / hiz );
+							calcTime = calcTime.clone().add(decTime, unit).startOf(unit);
+							var sicaklik = ( Math.abs(bas - bit) )/decTime;
+							var b = bas;
+
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
+								
+								data.push(randomBar(date, b));
+								b = b - sicaklik;
+								
+							}
 						}
-						
-						data.push(randomBar(date, b));
-						
-				}
-				if(bek>0){
+						if(bas=bit)
+						{
+							calcTime = calcTime.add(bek, unit).startOf(unit);
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
+								data.push(randomBar(date, bit));
+							}
+						}
+					//console.log(data);
+					}
 
-					calcTime = calcTime.add(bek, unit).startOf(unit);    //aynı şekilde sağ taraf dakika olarak sağ tarafa eklenicek
+					if(bek > 0)
+					{
+						///// only here leeft
+						if(bas<bit)
+						{
+							var time = Math.floor( ( (60*Math.abs(bas - bit))/hiz ) );
+							
+							var incTime = Math.floor( ( 60*( Math.abs(bas - bit) - (okFark/2) ) ) / hiz );
+							console.log("burası timee");
+							console.log(time);
+							console.log("burası inctime");
+							console.log(incTime);
+							var timeDif = time - incTime;
+							console.log("burassı timedif");
+							console.log(timeDif);
+							
+							bek = bek + timeDif;
+							@* if(okFark>0)
+								bek = bek + timeDif;
+							if(okFark<0)
+								bek = bek - timeDif;
+							if(okFark==0)
+								bek=bek; *@
+							console.log("burası bek");
+							console.log(bek);
+							
+							calcTime = calcTime.clone().add(incTime, unit).startOf(unit);
+							var sicaklik = Math.abs(bas - bit)/incTime;
+							var b = bas + okFark;
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
 
-					for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
-						data.push(randomBar(date, bit));
+								data.push(randomBar(date, b));
+								b = b + sicaklik;
+							}
+							@* calcTime = calcTime.clone().add(bek, unit).startOf(unit);
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
+
+								data.push(randomBar(date, bit));
+								
+							} *@
+						}
+						///// only here Left
+						if(bas>bit)
+						{
+							var decTime = Math.ceil( ( 60*( Math.abs(bas - bit) - (okFark/2) ) ) / hiz );
+							calcTime = calcTime.clone().add(decTime, unit).startOf(unit);
+							var sicaklik = ( Math.abs(bas - bit) )/decTime;
+							var b = bas;
+
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
+								
+								data.push(randomBar(date, b));
+								b = b - sicaklik;
+								
+							}
+						}
+						if(bas=bit)
+						{
+							//console.log("buraya girdi");
+							calcTime = calcTime.add(bek, unit).startOf(unit);
+							for (; date.isBefore(calcTime); date = date.clone().add(1, unit).startOf(unit)) {
+								data.push(randomBar(date, bit));
+							}
+						}
+					//console.log(data);
 					}
 					
-				} 
-			}
-			return data; 
-			
-		}
-        /////////// değişim burda bitiyor
+				}
+				
+				x.push(
+					{
+						label: okAdi, 
+						borderColor: getRandomColor(),
+						backgroundColor: color(window.chartColors.white).alpha(0.5).rgbString(),
+						data: data, 
+						type: 'line',
+						pointRadius: 0,
+						fill: false,
+						lineTension: 0,
+						borderWidth: 2
+					}
+				)
+			} 
+			return x;
+		}   
+		
+			/////////////////  DATA ÜRETİMİ  END
+			/////////////////  DATA ÜRETİMİ  END
+			/////////////////  DATA ÜRETİMİ  EEND
+			/////////////////  DATA ÜRETİMİ  EENDD
 		
 		/////////////////// okuyucu dataset
 
 		function getRandomColor() {
-			var letters = '0123456789ABCDEF'.split('');
 			var color = '#';
-			for (var i = 0; i < 6; i++ ) {
-				color += letters[Math.floor(Math.random() * 16)];
+			for (var i = 0; i < 6; i++) {
+				color += Math.floor(Math.random() * 10);
 			}
 			return color;
 		}
 
-		function getxDataset(okuyucu, data)
+		@* function getxDataset(okuyucu, data)
 		{
 			return {
 				label: okuyucu.okuyucuadi, 
@@ -605,7 +733,9 @@ function insert_nkt(){
 			for(s=0; s<t.length;s++){
 				x.push(getxDataset(t[s], generatexData(t[s])));
 			}
+			console.log(x);
 			return x;
+			
 		}
 		function generatexData(okuyucu){
 			var okuyucu_data = generateData();
@@ -615,7 +745,7 @@ function insert_nkt(){
 				okuyucu_data[i].y = Number(okuyucu_data[i].y) + p;
 			}
 			return okuyucu_data;
-		} 
+		}  *@
 		//console.log("burasdasdasdasd");
 		
 		//console.log(accx());
@@ -643,7 +773,7 @@ function insert_nkt(){
 		var cfg = {
 			data: {
 
-			datasets:  generateDataset(),
+			datasets:  generateData(),
 			},
 			options: {
 				
@@ -725,13 +855,13 @@ function insert_nkt(){
 		};
 
 		
-		@* var backgroundColor = 'white';
+		 @* var backgroundColor = 'white';
 		 Chart.plugins.register({
    			beforeDraw: function(c) {
 				ctx.fillStyle = backgroundColor;
 				ctx.fillRect(0, 0, c.chart.width, c.chart.height);
 				}
-			});  *@
+			}); *@
 		/*if(chart != undefined){
 			chart.destroy();
 		}	
