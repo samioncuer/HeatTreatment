@@ -1,0 +1,54 @@
+
+@{
+    Layout = "";
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] KBS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/layout.css" />
+</head>
+<div class="login-form" >
+  <h1>Login</h1>
+  <div class="form__group field">
+    <input type="input" class="form__field" placeholder="Kullanıcı Adı" id='username' required />
+    <label for="userName" class="form__label">Kullanıcı Adi</label>
+  </div>
+  <div class="form__group field">
+    <input type="password" class="form__field" placeholder="Şifre" id='password' required />
+    <label for="password" class="form__label">Şifre</label>
+  </div>
+  <br>
+  <button onclick="login()" class="square_btn">Login</button>
+</div>
+
+<script type="text/javascript" src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+    var BaseURL = @Json.Serialize(@Configuration.GetSection("ConnectionStrings").GetSection("BaseUrl").Value);
+</script>
+
+<script>
+    //consolo.log(BaseURL + '/Grafik/GetGrafik');
+
+    function login(){
+    $.post( BaseURL + '/Login/LogUserIn',{userName : $("#username").val(), password : $("#password").val()}
+      ,function(data){
+        if(data=="ok"){
+          window.location.href = BaseURL;
+        }
+        else{
+          alert("Kullanıcı adı şifre hatalı");
+        }
+    }).fail(function(e){
+          console.log(e);
+          alert("Bir hata oluştu", "error");
+    })
+  } 
+  $(function(){
+  })
+</script>

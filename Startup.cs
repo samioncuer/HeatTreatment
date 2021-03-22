@@ -27,6 +27,16 @@ namespace KBS_Proje
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
             services.AddControllersWithViews();
+
+            services.AddAuthentication("CookieSchema")
+                .AddCookie("CookieSchema", option => {
+                    option.LoginPath = "/Login/index";
+                    option.LogoutPath = "/Login/Logout";
+                    option.ExpireTimeSpan = TimeSpan.FromDays(1);
+                    option.SlidingExpiration = true;
+                }
+            );
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,7 +57,9 @@ namespace KBS_Proje
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

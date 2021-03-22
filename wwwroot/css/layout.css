@@ -114,6 +114,7 @@ section{
 .nav-btn{
     flex: 3;
     display: flex;
+    margin-left: -400px;
 }
 
 .nav-links{

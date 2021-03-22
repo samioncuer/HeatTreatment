@@ -1,6 +1,13 @@
 @{
     ViewData["Title"] = "Isıl İşlem Grafik";
 }
+<head>
+	<style>
+		@* canvas {
+			background-image: url(~/img/sistematiklogo.png);
+			} *@
+	</style>
+</head>
 <div id="top" style="display: flex;">
 	<div id="grafikler" >
 		<div style="margin: 10px 0">
@@ -9,7 +16,7 @@
 		<table id="grd_grfk"></table>
 	</div>
 	
-	<div id="noktalar" style="margin-left: 20px;">
+	<div id="noktalar" style="margin-left: 70px;">
 		<div style="margin:10px 0">
 			<a href="javascript:void(0)" class="btn btn-xs btn-primary" onclick="insert_nkt()">Nokta Ekle</a>
 		</div>
@@ -31,7 +38,8 @@
 			<a id="download" href="javascript:void(0)" class="btn btn-xs btn-primary" onclick="toJpeg()">JPEG OLUŞTUR</a>
 		</div>
 		<div id=graph-container>
-		<canvas id="chart1" style="margin-top: 10px;"></canvas>
+		
+		<canvas id="chart1"></canvas>
 		</div>
 	</div>
 <!--------------------------------------- chart   --------------------------------- -->
@@ -46,7 +54,7 @@ $(function(){
 	$('#grd_grfk').datagrid({
 		title:'GRAFİKLER',
 		iconCls:'icon-edit',
-		width:620,
+		width:670,
 		height:270,
 		singleSelect:true,
 		idField:'id',
@@ -59,10 +67,10 @@ $(function(){
 				formatter: function(value,row,index){
 					return value.hours + ':' + value.minutes;
 				}
-			},
-			{field:'baslama',title:'başlama zamanı',width:200,align:'center',editor:'datetimebox',
+			}, 
+			{field:'baslama',title:'başlama zamanı',width:250,align:'center',editor:'datetimebox',
 			formatter: function(value,row,index){
-					return moment(value).format('L, h:mm:ss a');
+					return moment(value).format();
 				}
 			},
 			{field:'action',title:'Action',width:110,align:'center',
@@ -218,7 +226,7 @@ $('#grd_nkt').datagrid({
 		//autoLoad:false,
 		title:'NOKTALAR',
 		iconCls:'icon-edit',
-		width:700,
+		width:590,
 		height:270,
 		singleSelect:true,
 		idField:'id',
@@ -237,8 +245,8 @@ $('#grd_nkt').datagrid({
 				}
 			},
 			{field:'hizi',title:'HIZI',width:70,align:'center',editor:'numberbox'},
-			{field:'arti',title:'ARTI',width:55,align:'center',editor:'numberbox'},
-			{field:'eksi',title:'EKSİ',width:55,align:'center',editor:'numberbox'},
+			//{field:'arti',title:'ARTI',width:55,align:'center',editor:'numberbox'},
+			//{field:'eksi',title:'EKSİ',width:55,align:'center',editor:'numberbox'},
 			{field:'action',title:'Action',width:110,align:'center',
 				formatter:function(value,row,index){
 					if (row.editing){
@@ -433,7 +441,7 @@ function insert_grfk(){
 		index: index,
 		row:{
 			grafikadi: 'yeni grafik',
-			zamanaralik: nr[nr.length-1].zamanaralik,
+			zamanaralik: 0000,
 			başlama: moment(),
 		}
 	});
@@ -469,18 +477,18 @@ function insert_nkt(){
 		index = 0;
 	}
 	var nr = $('#grd_nkt').datagrid('getRows');
-	console.log(nr);
-	console.log(nr[nr.length-1].beklemesuresi);
+	//console.log(nr);
+	//console.log(nr[nr.length-1].beklemesuresi);
 	index = nr.length + 1;
 	var grfk = $('#grd_grfk').datagrid('getSelected');
 	$('#grd_nkt').datagrid('insertRow', {
 		index: index,
 		row:{
-			sirano: nr[nr.length-1].sirano + 1,
+			sirano: 0,
 			grafikid: grfk.id,
-			baslamasicaklik: nr[nr.length-1].bitissicaklik,
-			bitissicaklik: nr[nr.length-1].bitissicaklik - 20,
-			beklemesuresi: nr[nr.length-1].beklemesuresi,
+			baslamasicaklik: 0,
+			bitissicaklik: 0,
+			beklemesuresi: 0000,
 			hizi: 100,
 			arti: 0,
 			eksi: 0,
@@ -762,11 +770,13 @@ function insert_nkt(){
 		}*/
 		/////////////////// okuyucu dataset
 		$('#chart1').remove();
-		$('#graph-container').append('<canvas id="chart1"><canvas>');
+		$('#graph-container').append('<canvas id="chart1"  style="margin-top: 10px;"><canvas>');
 		
 		var ctx = document.getElementById('chart1').getContext('2d');
-		ctx.canvas.width = 900;
-		ctx.canvas.height = 300;
+		ctx.canvas.width = 1000;
+		ctx.canvas.height = 400;
+		//var image = ['~/img/sistematiklogo.png','~/img/sistematiklogo.png']
+
 		var now = grf_Baslama;
 		var m_now = moment(now).format('MMMM Do YYYY, h:mm:ss a');
  		var color = Chart.helpers.color;
@@ -777,10 +787,16 @@ function insert_nkt(){
 			},
 			options: {
 				
+				layout: {
+					padding: {
+						top: 60
+				}
+				},
 				animation: {
 					duration: 0
 				},
 				title: {
+					position: 'bottom',
 					display: true,
 					text: m_now,
 				},
@@ -854,18 +870,22 @@ function insert_nkt(){
 			}
 		};
 
-		
-		 @* var backgroundColor = 'white';
-		 Chart.plugins.register({
+		var backgroundColor = 'white';
+		Chart.plugins.register({
    			beforeDraw: function(c) {
 				ctx.fillStyle = backgroundColor;
 				ctx.fillRect(0, 0, c.chart.width, c.chart.height);
-				}
-			}); *@
-		/*if(chart != undefined){
-			chart.destroy();
-		}	
-			console.log(chart);*/
+				},
+			afterDraw: function(c) {
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'center';
+				ctx.font = "18px Arial";
+				ctx.fillStyle = "black";
+				ctx.fillText('-KARTAL BOMBE-' + '                                                                                  ' +'Work Number:', c.chart.width /2, 20);
+				ctx.restore();
+							}
+			});  
+		
 			var chart = new Chart(ctx, cfg);
 			chart.update();
 
