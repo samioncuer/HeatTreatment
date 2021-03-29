@@ -33,6 +33,18 @@ namespace HeatTreatment.Controllers
         {
             return Json(_context.GRAFIKLER.ToList());
         }
+
+        [HttpPost]
+        public Object GetGrafikBaslamaById(int grafikId){
+            Console.WriteLine("gelen id");
+            Console.WriteLine(grafikId);
+            Grafik grafik = new Grafik();
+            grafik = _context.GRAFIKLER.FirstOrDefault(w => w.ID == grafikId);
+            Console.WriteLine("gönderdiğim obje");
+            Console.WriteLine(grafik.BASLAMA);
+            return grafik;
+        }
+
         [HttpPost]
         public void UpdateGrafik(string model,string timespan)
         {

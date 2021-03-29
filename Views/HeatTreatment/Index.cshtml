@@ -296,11 +296,18 @@ $('#grd_nkt').datagrid({
 			var noktaJson = $.post( BaseURL + '/Nokta/GetNoktaById',{ grafikId:p }
 				,function(result){
 					$('#grd_nkt').datagrid('loadData',result);
-					
+					var jqxhrs = $.post( BaseURL + "/Grafik/GetGrafikBaslamaById", { grafikId:p }
+							,function(res) {
+								var jqxhrs = $.get( BaseURL + "/Okuyucu/GetOkuyucu", function(okuyucu) {
+								draw(result,okuyucu,res);
+								$('#exp-jpg').show();
+							});
+						});
 					}).fail(function(e){
 						console.log(e);
 					}
 				);
+
 				}, 1100); 
 			}); 
 			///////////////////////////// 
@@ -398,11 +405,17 @@ function deleterow_nkt(target){
 			var noktaJson = $.post( BaseURL + '/Nokta/GetNoktaById',{ grafikId:p }
 				,function(result){
 					$('#grd_nkt').datagrid('loadData',result);
-					
-				}).fail(function(e){
-					console.log(e);
-				}
-			);
+					var jqxhrs = $.post( BaseURL + "/Grafik/GetGrafikBaslamaById", { grafikId:p }
+							,function(res) {
+								var jqxhrs = $.get( BaseURL + "/Okuyucu/GetOkuyucu", function(okuyucu) {
+								draw(result,okuyucu,res);
+								$('#exp-jpg').show();
+							});
+						});
+					}).fail(function(e){
+						console.log(e);
+					}
+				);
 				}, 1100); 
 			}); 
 		}
