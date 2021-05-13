@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\samio\\source\\repos\\KBS_Proje\\KBS_Proje\\KBS_Proje.csproj": {}
+    "C:\\SamioProjeler\\KBS_Proje\\KBS_Proje.csproj": {}
   },
   "projects": {
-    "C:\\Users\\samio\\source\\repos\\KBS_Proje\\KBS_Proje\\KBS_Proje.csproj": {
+    "C:\\SamioProjeler\\KBS_Proje\\KBS_Proje.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\samio\\source\\repos\\KBS_Proje\\KBS_Proje\\KBS_Proje.csproj",
+        "projectUniqueName": "C:\\SamioProjeler\\KBS_Proje\\KBS_Proje.csproj",
         "projectName": "KBS_Proje",
-        "projectPath": "C:\\Users\\samio\\source\\repos\\KBS_Proje\\KBS_Proje\\KBS_Proje.csproj",
+        "projectPath": "C:\\SamioProjeler\\KBS_Proje\\KBS_Proje.csproj",
         "packagesPath": "C:\\Users\\samio\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\samio\\source\\repos\\KBS_Proje\\KBS_Proje\\obj\\",
+        "outputPath": "C:\\SamioProjeler\\KBS_Proje\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -66,6 +66,16 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[3.1.10, 3.1.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.1.14, 3.1.14]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -74,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
